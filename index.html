@@ -44,12 +44,34 @@
       color: #2B2318;
       font-family: 'Jost', sans-serif;
       font-weight: 300;
-      background-image: url('backgr.jpg');
+    }
 
-      background-attachment: fixed;
-      background-size: cover;       /* Заполняет весь экран без искажений
-      /* background-position: center;  Центрирует изображение */
-      background-repeat: no-repeat; /* Запрещает повторение */
+    /* -------------------------------------------------------
+       Фоновое изображение вынесено в отдельный фиксированный
+       псевдоэлемент ::after — это решает две проблемы:
+       1) background-attachment:fixed плохо работает на iOS
+          (Safari не поддерживает его внутри scroll-контейнера)
+       2) Большое изображение 5000×5000 корректно масштабируется
+          через object-fit:cover аналог без артефактов
+    ------------------------------------------------------- */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;                    /* ниже всего контента   */
+      background-image: url('backgr.jpg');
+      background-size: cover;         /* масштаб без искажений */
+      background-position: center top;/* центр + чуть выше     */
+      background-repeat: no-repeat;
+      /* Снижаем нагрузку на GPU при рендере огромного растра  */
+      will-change: auto;
+      image-rendering: auto;
+    }
+
+    /* Полупрозрачная подложка поверх фото, чтобы текст читался */
+    body > * {
+      position: relative;
+      z-index: 1;
     }
 
     /* Декоративная линия-орнамент */
@@ -111,7 +133,7 @@
       margin-right: 8px;
     }
 
-    /* Фоновая текстура (зерно) */
+    /* Фоновая текстура (зерно) — поверх фото, под контентом */
     body::before {
       content: '';
       position: fixed;
