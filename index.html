@@ -182,12 +182,12 @@
        ============================================================ -->
   <header class="min-h-screen flex flex-col items-center justify-center px-4 py-16 text-center">
 
-    <!-- Надпись над именами -->
+
     <p class="font-body tracking-[0.3em] text-ink text-xs uppercase mb-6 fade-in">
       Мы приглашаем вас разделить наш особенный день
     </p>
 
-    <!-- ↓ Замените имена жениха и невесты -->
+
     <h1 class="font-display text-6xl md:text-8xl lg:text-9xl text-ink leading-none mb-2 fade-in" style="transition-delay:0.1s">
       Антон
     </h1>
@@ -196,22 +196,21 @@
       Юлия
     </h1>
 
-    <!-- Фото-галерея (3 фото горизонтально на десктопе, стек на мобильном) -->
-    <!-- ↓ Замените src на реальные URL фотографий пары -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-4xl mt-4 fade-in" style="transition-delay:0.4s">
-      <div class="relative overflow-hidden rounded-sm aspect-[3/4] gallery-img">
-        <img src="https://placehold.co/600x800/C9A48A/F7F2EC?text=Фото+2" alt="Фото пары 1"
-             class="w-full h-full object-cover" />
+    <!-- Фото-галерея (одно фото по центру) -->
+    <!-- ↓ Замените src на реальный URL фотографии пары -->
+    <div class="flex justify-center w-full max-w-3xl mt-4 fade-in" style="transition-delay:0.4s">
+      <div class="relative overflow-hidden rounded-sm aspect-[3/4] sm:aspect-[4/3] md:aspect-[16/9] w-full max-w-lg gallery-img">
+        <img 
+          src="photo_2026.jpg" 
+          alt="Антон и Юлия" 
+          class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+          loading="lazy"
+        />
+        
       </div>
-      <!-- <div class="relative overflow-hidden rounded-sm aspect-[3/4] sm:aspect-auto sm:row-span-1 gallery-img">
-        <img src="https://placehold.co/600x800/C9A48A/F7F2EC?text=Фото+2" alt="Фото пары 2"
-             class="w-full h-full object-cover" />
-      </div>
-      <div class="relative overflow-hidden rounded-sm aspect-[3/4] gallery-img">
-        <img src="https://placehold.co/600x800/7A5C48/F7F2EC?text=Фото+3" alt="Фото пары 3"
-             class="w-full h-full object-cover" />
-      </div> -->
     </div>
+
+    
 
     <!-- Стрелка вниз -->
     <a href="#story" class="mt-12 text-blush opacity-60 hover:opacity-100 transition-opacity fade-in" style="transition-delay:0.6s" aria-label="Прокрутить вниз">
@@ -305,8 +304,7 @@
     <h2 class="font-display text-4xl md:text-5xl text-ink mb-6">Cocktail Attire</h2>
 
     <p class="text-ink/70 leading-relaxed mb-10">
-      Нам хочется, чтобы этот вечер был элегантным, но не сковывал вас. Выбирайте коктейльные платья, классические костюмы
-      или нарядные ансамбли — главное, чтобы вам было комфортно и торжественно.
+      Дресс-код: Cocktail Attire. Мы будем рады видеть вас в элегантных вечерних образах — коктейльные платья для дам и костюмы для джентльменов.
     </p>
 
     <!-- Карточки с советами -->
@@ -430,20 +428,48 @@
         <div class="grid grid-cols-2 gap-y-3 gap-x-4">
           <!-- ↓ При необходимости добавьте/удалите варианты -->
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="champagne" /> Шампанское
+            <input type="checkbox" name="drinks" value="champagne" /> Пиво
           </label>
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="wine" /> Вино
+            <input type="checkbox" name="drinks" value="champagne" /> Сидр
           </label>
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="whiskey" /> Виски
+            <input type="checkbox" name="drinks" value="wine" /> Эль
           </label>
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="nonalcoholic" /> Безалкогольное
+            <input type="checkbox" name="drinks" value="whiskey" /> Вино
           </label>
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Другое
+            <input type="checkbox" name="drinks" value="nonalcoholic" /> Шомпанское
           </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Портвейн
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Водка
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Виски
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Коньяк
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Ром
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Текила
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Бренди
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Джин
+          </label>
+          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+            <input type="checkbox" name="drinks" value="other_drink" /> Абсент
+          </label>
+
         </div>
       </div>
 
