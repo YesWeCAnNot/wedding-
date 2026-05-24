@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="/static/favicon.ico?v=2" type="image/x-icon">
 
   <script>
     tailwind.config = {
@@ -59,7 +60,7 @@
       position: fixed;
       inset: 0;
       z-index: -1;                    /* ниже всего контента   */
-      background-image: url('backgr.jpg');
+      background-image: url('/static/backgr.jpg');
       background-size: cover;         /* масштаб без искажений */
       background-position: center top;/* центр + чуть выше     */
       background-repeat: no-repeat;
@@ -163,18 +164,9 @@
 
 <body class="antialiased">
 
-  <!-- ========================================================
-       CSRF-токен (заменить на серверную вставку перед деплоем)
-       ======================================================== -->
   <script>
-    // ↓ При серверном рендере замените '{{csrf_token}}' на реальный токен
-    const CSRF_TOKEN = '{{csrf_token}}';
-
-    // ↓ Замените на реальный домен после деплоя
-    const TRUSTED_ORIGIN = window.location.origin;
-
     // ↓ Endpoint для RSVP (замените перед деплоем)
-    const RSVP_ENDPOINT = 'https://example.com/api/rsvp';
+    const RSVP_ENDPOINT = '/api/data';
   </script>
 
   <!-- ============================================================
@@ -201,7 +193,7 @@
     <div class="flex justify-center w-full max-w-3xl mt-4 fade-in" style="transition-delay:0.4s">
       <div class="relative overflow-hidden rounded-sm aspect-[3/4] sm:aspect-[4/3] md:aspect-[16/9] w-full max-w-lg gallery-img">
         <img 
-          src="photo_2026.jpg" 
+          src="/static/photo_2026.jpg" 
           alt="Антон и Юлия" 
           class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
           loading="lazy"
@@ -233,15 +225,15 @@
       Всё началось с одного взгляда
     </h2>
     <p class="text-ink/70 leading-relaxed text-base mb-5">
-      Мы встретились в августе — в месте, где, казалось бы, меньше всего ждёшь встретить любовь. 
+      Мы встретились в августе - в месте, где, казалось бы, меньше всего ждёшь встретить любовь. 
       Работа в морге учит ценить каждый живой момент, и, может быть, именно поэтому мы сразу почувствовали: этот человек — настоящий.
     </p>
     <p class="text-ink/70 leading-relaxed text-base mb-5">
       Мы научились видеть красоту там, где другие видят только тишину. 
-      В нашей жизни много нежности — к людям, к мелочам, к друг другу.
+      В нашей жизни много нежности - к людям, к мелочам, к друг другу.
     </p>
     <p class="font-display italic text-blush text-xl md:text-2xl mt-8">
-      И вот мы здесь — готовы сказать «да» перед теми, кто нам дорог.
+      И вот мы здесь - готовы сказать «да» перед теми, кто нам дорог.
     </p>
   </section>
 
@@ -389,7 +381,7 @@
     <p class="ornament sm-ornament font-body tracking-[0.25em] text-blush text-xs uppercase mb-8 text-center">Подтвердить участие</p>
     <h2 class="font-display text-4xl md:text-5xl text-ink mb-3 text-center">Мы вас ждём</h2>
     <p class="text-ink/60 text-sm text-center mb-10">
-      Пожалуйста, заполните форму до <strong>15 июня 2026</strong>, чтобы мы успели всё подготовить.
+      Пожалуйста, заполните форму до <strong>25 июня 2026</strong>, чтобы мы успели всё подготовить.
     </p>
 
     <!-- Сообщение об успехе (скрыто по умолчанию) -->
@@ -408,6 +400,9 @@
     <div id="rsvp-form-wrapper">
       <!-- ↑↓ Не используем <form> с action; логика — через JS fetch -->
 
+      
+      <!-- ШАГ 1: всегда видны — имя + вопрос «придёте?» -->
+      
       <!-- Поле: имя -->
       <div class="mb-7">
         <label for="rsvp-name" class="block font-body text-xs tracking-widest uppercase text-ink/50 mb-2">
@@ -416,82 +411,164 @@
         <input
           type="text"
           id="rsvp-name"
-          placeholder="Иван Иванов"
+          placeholder="Антон Шевцов"
           class="w-full border border-sand bg-transparent rounded-sm px-4 py-3 font-body text-ink placeholder-ink/30 focus:outline-none focus:border-blush transition-colors"
         />
         <p id="name-error" class="hidden text-red-500 text-xs mt-1">Пожалуйста, введите ваше имя.</p>
       </div>
 
-      <!-- Чекбоксы: напитки -->
+      <!-- Вопрос: придёте? -->
       <div class="mb-7">
-        <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Что я люблю пить</p>
-        <div class="grid grid-cols-2 gap-y-3 gap-x-4">
-          <!-- ↓ При необходимости добавьте/удалите варианты -->
+        <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Вы придёте?</p>
+        <div class="flex gap-4">
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="champagne" /> Пиво
+            <input type="radio" name="coming" value="yes"
+              class="accent-blush w-4 h-4 flex-shrink-0"
+              onchange="onComingChange('yes')" />
+            Да, буду!
           </label>
           <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="champagne" /> Сидр
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="wine" /> Эль
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="whiskey" /> Вино
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="nonalcoholic" /> Шомпанское
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Портвейн
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Водка
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Виски
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Коньяк
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Ром
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Текила
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Бренди
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Джин
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="drinks" value="other_drink" /> Абсент
-          </label>
-
-        </div>
-      </div>
-
-      <!-- Чекбоксы: еда -->
-      <div class="mb-10">
-        <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Что я люблю есть</p>
-        <div class="grid grid-cols-2 gap-y-3 gap-x-4">
-          <!-- ↓ При необходимости добавьте/удалите варианты -->
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="food" value="meat" /> Мясо
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="food" value="fish" /> Рыба
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="food" value="vegetarian" /> Вегетарианское
-          </label>
-          <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
-            <input type="checkbox" name="food" value="desserts" /> Десерты
+            <input type="radio" name="coming" value="no"
+              class="accent-blush w-4 h-4 flex-shrink-0"
+              onchange="onComingChange('no')" />
+            К сожалению, нет
           </label>
         </div>
       </div>
+
+      <!-- ШАГ 2: появляется только если ответ «Да» -->
+      <div id="rsvp-details" class="hidden">
+        <!-- Вопрос: один или с парой -->
+        
+        <!-- Где будете -->
+        <div class="mb-7">
+          <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Где вы будете</p>
+          <div class="flex flex-col gap-3">
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="radio" name="location" value="zags"
+                class="accent-blush w-4 h-4 flex-shrink-0" />
+              Буду только в ЗАГСе
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="radio" name="location" value="resort"
+                class="accent-blush w-4 h-4 flex-shrink-0" />
+              Буду только на базе отдыха
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="radio" name="location" value="both"
+                class="accent-blush w-4 h-4 flex-shrink-0" />
+              Буду везде 🎉
+            </label>
+          </div>
+        </div>
+
+        <!-- Вопрос: один или с парой -->
+        <div class="mb-7">
+          <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Вы придёте</p>
+          <div class="flex gap-4">
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="radio" name="attendance" value="solo" checked
+                class="accent-blush w-4 h-4 flex-shrink-0"
+                onchange="togglePartner(this.value)" />
+              Один / одна
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="radio" name="attendance" value="partner"
+                class="accent-blush w-4 h-4 flex-shrink-0"
+                onchange="togglePartner(this.value)" />
+              С парой
+            </label>
+          </div>
+   
+          <!-- Поле имени пары — скрыто по умолчанию -->
+          <div id="partner-block" class="hidden mt-4 overflow-hidden transition-all">
+            <label for="partner-name" class="block font-body text-xs tracking-widest uppercase text-ink/50 mb-2">
+              Имя вашей пары
+            </label>
+            <input
+              type="text"
+              id="partner-name"
+              placeholder="Юлия Шевцова"
+              class="w-full border border-sand bg-transparent rounded-sm px-4 py-3 font-body text-ink placeholder-ink/30 focus:outline-none focus:border-blush transition-colors"
+            />
+          </div>
+        </div>
+  
+        <!-- Чекбоксы: напитки -->
+        <div class="mb-7">
+          <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Что я люблю пить</p>
+          <div class="grid grid-cols-2 gap-y-3 gap-x-4">
+            <!-- ↓ При необходимости добавьте/удалите варианты -->
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="beer" /> Пиво
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="cider" /> Сидр
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="el" /> Эль
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="wine" /> Вино
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="champagne" /> Шампанское
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="port" /> Портвейн
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="vodka" /> Водка
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="whiskey" /> Виски
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="cognac" /> Коньяк
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="rum" /> Ром
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="tequila" /> Текила
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="brandy" /> Бренди
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="gin" /> Джин
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="absinthe" /> Абсент
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="drinks" value="nonalcoholic" /> Безалкогольное/Соки/Вода
+            </label>
+  
+          </div>
+        </div>
+  
+        <!-- Чекбоксы: еда -->
+        <div class="mb-10">
+          <p class="font-body text-xs tracking-widest uppercase text-ink/50 mb-3">Что я люблю есть</p>
+          <div class="grid grid-cols-2 gap-y-3 gap-x-4">
+            <!-- ↓ При необходимости добавьте/удалите варианты -->
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="food" value="meat" /> Мясо
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="food" value="fish" /> Рыба
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="food" value="vegetarian" /> Вегетарианское
+            </label>
+            <label class="check-label flex items-center gap-3 text-sm text-ink/70 cursor-pointer hover:text-ink transition-colors">
+              <input type="checkbox" name="food" value="desserts" /> Десерты
+            </label>
+          </div>
+        </div>
+      </div>
+
 
       <!-- Кнопка отправки -->
       <button
@@ -502,6 +579,26 @@
         Подтвердить участие
       </button>
     </div>
+  </section>
+  <!-- ============================================================
+       ПОДАРОК
+       ============================================================ -->
+  <section id="gift" class="py-20 px-6 max-w-xl mx-auto text-center fade-in">
+    <p class="ornament font-body tracking-[0.25em] text-blush text-xs uppercase mb-8">Подарок</p>
+ 
+    <h2 class="font-display text-4xl md:text-5xl text-ink mb-6">Если хочется сделать приятное</h2>
+ 
+    <p class="text-ink/70 leading-relaxed mb-5">
+      Для нас главный подарок — это вы рядом в этот день. Ваше присутствие, тепло и искренние улыбки — дороже всего.
+    </p>
+    <p class="text-ink/70 leading-relaxed">
+      Но если вы всё же хотите порадовать нас чем-то большим — мы будем рады денежному подарку.
+      Это поможет нам начать совместную жизнь так, как мы об этом мечтаем.
+    </p>
+ 
+    <p class="font-display italic text-blush text-xl mt-10">
+      Спасибо, что вы есть 🤍
+    </p>
   </section>
 
   <!-- ============================================================
@@ -523,7 +620,7 @@
        1. Обратный отсчёт
     ---------------------------------------------------------- */
     // ↓ Замените дату и время свадьбы (ISO 8601, ваш часовой пояс)
-    const WEDDING_DATE = new Date('2026-07-11T15:00:00+03:00');
+    const WEDDING_DATE = new Date('2026-07-11T15:15:00+03:00');
 
     function updateCountdown() {
       const now  = new Date();
@@ -559,9 +656,44 @@
     );
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
+    /* ----------------------------------------------------------
+       3. Показ / скрытие деталей формы по ответу "придёте?"
+    ---------------------------------------------------------- */
+
+    function onComingChange(value) {
+      const details = document.getElementById('rsvp-details');
+      const btn     = document.getElementById('rsvp-submit');
+  
+      if (value === 'yes') {
+        details.classList.remove('hidden');
+      } else {
+        details.classList.add('hidden');
+        document.querySelectorAll('#rsvp-details input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#rsvp-details input[type="radio"]').forEach(rb => rb.checked = false);
+        document.getElementById('partner-name').value = '';
+        document.getElementById('partner-block').classList.add('hidden');
+      }
+      btn.classList.remove('hidden');
+    }
+
+
 
     /* ----------------------------------------------------------
-       3. Сбор и отправка формы RSVP
+       3. Показ / скрытие поля имени пары
+    ---------------------------------------------------------- */
+    function togglePartner(value) {
+      const block = document.getElementById('partner-block');
+      if (value === 'partner') {
+        block.classList.remove('hidden');
+      } else {
+        block.classList.add('hidden');
+        document.getElementById('partner-name').value = '';
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       4. Сбор и отправка формы RSVP
     ---------------------------------------------------------- */
     async function submitRSVP() {
       const nameInput  = document.getElementById('rsvp-name');
@@ -583,25 +715,54 @@
         return;
       }
 
-      // Сбор чекбоксов
-      const drinks = [...document.querySelectorAll('input[name="drinks"]:checked')].map(cb => cb.value);
-      const food   = [...document.querySelectorAll('input[name="food"]:checked')].map(cb => cb.value);
+
+      const comingRadio = document.querySelector('input[name="coming"]:checked');
+      const coming = comingRadio ? comingRadio.value : null;
+      if (!coming) {
+        errorBlock.textContent = 'Пожалуйста, укажите, придёте ли вы.';
+        errorBlock.classList.remove('hidden');
+        return;
+      }
+
+      // Если "нет" — только имя, остальное пустое
+      let location    = '';
+      let attendance  = '';
+      let partnerName = '';
+      let drinks      = [];
+      let food        = [];
+
+
+      if (coming === 'yes') {
+        const locationRadio   = document.querySelector('input[name="location"]:checked');
+        const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
+        location    = locationRadio   ? locationRadio.value   : '';
+        attendance  = attendanceRadio ? attendanceRadio.value : '';
+        partnerName = attendance === 'partner'
+          ? document.getElementById('partner-name').value.trim()
+          : '';
+        drinks = [...document.querySelectorAll('input[name="drinks"]:checked')].map(cb => cb.value);
+        food   = [...document.querySelectorAll('input[name="food"]:checked')].map(cb => cb.value);
+      }
 
       // Формирование JSON-payload
       const payload = {
         name,
+        coming,
+        location,
+        attendance,
+        partner_name: partnerName,
         drinks,
         food,
-        csrf_token: CSRF_TOKEN,          // CSRF-токен для серверной проверки
         submitted_at: new Date().toISOString(),
       };
 
+
       // Клиентская проверка origin (дополнительная мера безопасности)
-      if (window.location.origin !== TRUSTED_ORIGIN) {
-        errorBlock.textContent = 'Недопустимый источник запроса.';
-        errorBlock.classList.remove('hidden');
-        return;
-      }
+      // if (window.location.origin !== TRUSTED_ORIGIN) {
+      //   errorBlock.textContent = 'Недопустимый источник запроса.';
+      //   errorBlock.classList.remove('hidden');
+      //   return;
+      // }
 
       // Блокируем кнопку + спиннер
       submitBtn.disabled = true;
@@ -628,7 +789,7 @@
 
       } catch (err) {
         console.error('RSVP error:', err);
-        errorBlock.textContent = 'Не удалось отправить ответ. Пожалуйста, попробуйте ещё раз или напишите нам напрямую.';
+        errorBlock.textContent = 'Не удалось отправить ответ. Пожалуйста, попробуйте ещё раз или напишите нам напрямую. tg: @klenoq';
         errorBlock.classList.remove('hidden');
 
         // Разблокируем кнопку
